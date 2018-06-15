@@ -60,7 +60,8 @@ func Q1()  {
 	fmt.Println("id: ", api_struct.Ret[0].ID)
 	fmt.Println("domain: ", api_struct.Ret[0].Domain)
 	fmt.Println("username: ", api_struct.Ret[0].Username)
-	fmt.Println("cash: ", api_struct.Ret[0].Cash)
+	fmt.Printf("cash: %+v\n", api_struct.Ret[0].Cash)
+	//fmt.Println("cash: ", api_struct.Ret[0].Cash)
 
 }
 
