@@ -21,10 +21,8 @@ func main()  {
 	var anser int64
 	//接收階乘結果並相加
 	for i:=0; i<limit; i++{
-		select {
-		case res := <- c:
-			anser = anser + res
-		}
+		res := <- c
+		anser = anser + res
 	}
 
 	//紀錄消耗時間
