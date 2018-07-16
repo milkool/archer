@@ -1,0 +1,12 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "mOPoZM8u+ubTLf5KfI4WGzn73XI=",
+			"path": "archer",
+			"revision": ""
+		}
+	],
+	"rootPath": "go_test/week6/hw2"
+}
