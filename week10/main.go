@@ -36,7 +36,7 @@ func newBrowser() *browser {
 	return hc;
 }
 
-func getUrl(url string) time.Duration {
+func getUrl(url string, c chan time.Duration) {
 	//data := ""
 	browser := newBrowser()
 
@@ -50,7 +50,7 @@ func getUrl(url string) time.Duration {
 	//data = string(dataByte)
 	//fmt.Println(data)
 
-	return end
+	c <- end
 }
 
 func main()  {
@@ -60,6 +60,7 @@ func main()  {
 	var time_recoder []time.Duration
 	var max float64 = 0
 	var min float64 = 0
+	var total float64 = 0
 
 	//輸入遊戲ID
 	fmt.Printf("請輸入目標API: ")
@@ -73,9 +74,18 @@ func main()  {
 	//開始連線
 	//記錄全域開始時間
 	start := time.Now()
+	//建立通道與buff
+	c := make(chan time.Duration, go_r)
 	for i := 0; i < go_r; i++ {
-		time_recoder = append(time_recoder, getUrl(url))
+		go getUrl(url, c)
 	}
+
+	//接收結果
+	for i := 0; i < go_r; i++ {
+		res := <- c
+		time_recoder = append(time_recoder, res)
+	}
+
 	//紀錄全域結束時間
 	end := time.Since(start)
 
@@ -86,16 +96,22 @@ func main()  {
 			max = sec
 		} else if sec < min {
 			min = sec
-		} else if min == 0 {
+		}
+		if min == 0 {
 			min = sec
 		}
-
 		fmt.Printf("第 %3d 次花費時間: %f 秒\n", k+1, sec)
 	}
 	fmt.Printf("單一最大花費時間: %f 秒\n", max)
 	fmt.Printf("單一最小花費時間: %f 秒\n", min)
 	end_sec := end.Seconds()
 	fmt.Printf("壓測總數花費時間: %f 秒\n", end_sec)
-	fmt.Printf("平均花費時間: %f 秒\n", end_sec/float64(len(time_recoder)))
+
+	//平均花費時間
+	for _, v := range time_recoder {
+		total += v.Seconds()
+	}
+
+	fmt.Printf("平均花費時間: %f 秒\n", total/float64(len(time_recoder)))
 
 }
